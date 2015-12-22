@@ -1,4 +1,4 @@
-(defproject madek-downloader "0.1.0"
+(defproject madek-downloader "0.2.0"
   :description "Madek Downloader"
   :url "https://github.com/Madek/madek-downloader"
   :license {:name "GPL v3"}

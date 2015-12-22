@@ -139,12 +139,21 @@
     (download-media-files entry-dir-path media-entry)))
 
 
+;### check credentials ########################################################
+
+(defn check-credentials [api-entry-point api-http-opts]
+  (let [response (-> (roa/get-root api-entry-point :default-conn-opts api-http-opts)
+                     (roa/relation :auth-info)
+                     (roa/get {}))]
+    (logging/info (-> response roa/data))))
+
 ;### DL Set ###################################################################
 
 (defn download-set [id dl-path api-entry-point api-http-opts]
   (catcher/wrap-with-log-error
     (let [me-get-opts (merge {:collection_id id}
-                             (if (:basic-auth api-http-opts)
+                             (if (or (:basic-auth api-http-opts)
+                                     (-> api-http-opts :cookies (get "madek-session")))
                                {:me_get_full_size "true"}
                                {:public_get_full_size "true"}))
           collection (-> (roa/get-root api-entry-point
